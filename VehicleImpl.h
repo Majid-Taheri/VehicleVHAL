@@ -38,7 +38,7 @@ private:
 
     std::atomic<bool> running;
     std::condition_variable cv;
-    bool isCruiseControl;
+    bool isCruiseControlEnabled;
     bool subscribe_running;
     int cruiseModeMaxSpeed;
     int cruiseModeMinSpeed;

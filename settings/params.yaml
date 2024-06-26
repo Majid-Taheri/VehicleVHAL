@@ -6,4 +6,4 @@ LOG_FILE_NAME: "log.json"  # Filename for logging data
 MANUAL_MODE_MAX_SPEED: 100  # Maximum speed of the vehicle in mph
 MANUAL_MODE_MIN_SPEED: 10  # Minimum speed for manual mode in mph
 SIM_RATE: 10  # Simulation rate in Hz
-SPEED_AVG_WIN_SIZE: 20  # Time window in seconds for calculating the average speed
+SPEED_AVG_WIN_SIZE: 20  # Number of speed data for calculating the average speed

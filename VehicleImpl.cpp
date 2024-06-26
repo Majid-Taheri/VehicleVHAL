@@ -13,7 +13,7 @@
 
 VehicleImpl::VehicleImpl(std::shared_ptr<spdlog::logger> logger)
     : logger_(std::move(logger)) {
-    isCruiseControl = false;
+    isCruiseControlEnabled = false;
     running = true;
     subscribe_running = false;
     this->logger_->set_level(spdlog::level::info); 
@@ -79,7 +79,7 @@ void VehicleImpl::continuousSpeedUpdate() {
 
     while (running) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / simRate));
-        if (!isCruiseControl) {
+        if (!isCruiseControlEnabled) {
             int randomSpeed = distribution(generator);
 
             if (speedQueue.size() == speedAvgWinSize) {
@@ -108,7 +108,7 @@ void VehicleImpl::setSpeed(int speed, IVehicleCallback* callback) {
         callback->onSetSpeed(false);
         return;
     }
-    isCruiseControl = true;
+    isCruiseControlEnabled = true;
     currentSpeed = speed;
 
     saveCruiseControlSpeed(speed);
@@ -117,7 +117,7 @@ void VehicleImpl::setSpeed(int speed, IVehicleCallback* callback) {
 }
 
 void VehicleImpl::unsetSpeed(IVehicleCallback* callback) {
-    isCruiseControl = false;
+    isCruiseControlEnabled = false;
     logSpeedToJson();
     callback->onUnsetSpeed(true);
     this->logger_->info("Unset speed, cruise control deactivated");
@@ -224,7 +224,7 @@ void VehicleImpl::logSpeedToJson() {
 
     logEntry["timestamp"] = nanoseconds;
     logEntry["speed"] = currentSpeed;
-    logEntry["cruise_control"] = isCruiseControl ? "active" : "inactive";
+    logEntry["cruise_control"] = isCruiseControlEnabled ? "active" : "inactive";
 
     std::ofstream file(logFilePath, std::ios::app);
     file << logEntry.dump() << std::endl;
