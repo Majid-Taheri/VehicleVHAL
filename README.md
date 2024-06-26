@@ -50,13 +50,27 @@ Implements the vehicle's speed control logic:
 Implements the command-line interface for user interaction:
 - **Commands:** `get speed`, `set speed <value>`, `unset speed`, `get historic_cc_speed <index>`, `subscribe speed`, `unsubscribe speed`.
 
+
+### CLI Commands
+
+- **`get speed`**
+    Returns the current speed. In Default Mode, the speed varies randomly. In Cruise Control, the speed remains constant.
+
+- **`set speed <value>`**
+    Sets the speed to the provided value for Cruise Control.
+
+- **`unset speed`**
+    Disables Cruise Control and returns to Default Mode with randomly generated speeds.
+
+- **`get historic_cc_speed <index>`**
+    Returns the historical Cruise Control speed at the provided index. If `index` is `min`, it returns the oldest recorded speed. If `index` is `max`, it returns the most recent recorded speed.
+
+- **`subscribe speed`**
+    Continuously prints the current speed in the command line.
+
+- **`unsubscribe speed`**
+    Ends the continuous printing of the current speed.
+
 ## Logging
 
-The emulator also saves logs in a JSON file for post-processing. Each log entry contains the current state of the cruise control, the current speed, and a timestamp. The structure of the log entries is as follows:
-
-```json
-{
-  "cruise_control": "inactive",
-  "speed": 39,
-  "timestamp": 1719372741218902000
-}
+The emulator also saves logs in a JSON file for post-processing. Each log entry contains the current state of the cruise control, the current speed, and a timestamp. 
