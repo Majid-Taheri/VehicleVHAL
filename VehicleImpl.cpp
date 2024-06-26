@@ -39,19 +39,36 @@ VehicleImpl::~VehicleImpl() {
     }
     this->logger_->info("VehicleImpl destroyed");
 }
-
 void VehicleImpl::loadFromConfig() {
-    YAML::Node config = YAML::LoadFile("../settings/params.yaml");
-    cruiseModeMaxSpeed = config["CRUISE_MODE_MAX_SPEED"].as<int>();
-    cruiseModeMinSpeed = config["CRUISE_MODE_MIN_SPEED"].as<int>();
-    currentSpeed       = config["INIT_SPEED"].as<int>();
-    historicCCFileName = config["HISTORIC_CC_FILE_NAME"].as<std::string>();
-    logFileName        = config["LOG_FILE_NAME"].as<std::string>();
-    maxSpeed           = config["MANUAL_MODE_MAX_SPEED"].as<int>();
-    minSpeed           = config["MANUAL_MODE_MIN_SPEED"].as<int>();
-    simRate            = config["SIM_RATE"].as<double>();
-    speedAvgWinSize    = config["SPEED_AVG_WIN_SIZE"].as<int>();
-    this->logger_->info("Configuration loaded from params.yaml");
+    try {
+        YAML::Node config = YAML::LoadFile("../settings/params.yaml");
+
+        cruiseModeMaxSpeed = config["CRUISE_MODE_MAX_SPEED"].as<int>(90);
+        cruiseModeMinSpeed = config["CRUISE_MODE_MIN_SPEED"].as<int>(20);
+        currentSpeed       = config["INIT_SPEED"].as<int>(50);
+        historicCCFileName = config["HISTORIC_CC_FILE_NAME"].as<std::string>("historic_cc_speeds.json");
+        logFileName        = config["LOG_FILE_NAME"].as<std::string>("log.json");
+        maxSpeed           = config["MANUAL_MODE_MAX_SPEED"].as<int>(100);
+        minSpeed           = config["MANUAL_MODE_MIN_SPEED"].as<int>(10);
+        simRate            = config["SIM_RATE"].as<double>(10.0);
+        speedAvgWinSize    = config["SPEED_AVG_WIN_SIZE"].as<int>(1);
+
+        this->logger_->info("Loaded configuration:");
+        this->logger_->info("CRUISE_MODE_MAX_SPEED: {}", cruiseModeMaxSpeed);
+        this->logger_->info("CRUISE_MODE_MIN_SPEED: {}", cruiseModeMinSpeed);
+        this->logger_->info("INIT_SPEED: {}", currentSpeed);
+        this->logger_->info("HISTORIC_CC_FILE_NAME: {}", historicCCFileName);
+        this->logger_->info("LOG_FILE_NAME: {}", logFileName);
+        this->logger_->info("MANUAL_MODE_MAX_SPEED: {}", maxSpeed);
+        this->logger_->info("MANUAL_MODE_MIN_SPEED: {}", minSpeed);
+        this->logger_->info("SIM_RATE: {}", simRate);
+        this->logger_->info("SPEED_AVG_WIN_SIZE: {}", speedAvgWinSize);
+    } catch (const YAML::BadFile& e) {
+        this->logger_->error("YAML file error: {}", e.what());
+    } catch (const std::exception& e) {
+        this->logger_->error("Error: {}", e.what());
+
+    }
 }
 
 void VehicleImpl::continuousSpeedUpdate() {
